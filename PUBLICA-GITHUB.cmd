@@ -63,6 +63,20 @@ if errorlevel 1 (
   echo Nu exista modificari noi de salvat.
 )
 
+echo.
+echo Verific istoricul existent pe GitHub si il pastrez.
+git fetch origin
+if errorlevel 1 goto :failed
+
+git show-ref --verify --quiet refs/remotes/origin/main
+if errorlevel 1 goto :push
+git merge-base --is-ancestor origin/main main >nul 2>&1
+if not errorlevel 1 goto :push
+if errorlevel 128 goto :failed
+git merge --allow-unrelated-histories --no-edit origin/main
+if errorlevel 1 goto :merge_conflict
+
+:push
 git push -u origin main
 if errorlevel 1 goto :failed
 
@@ -75,6 +89,13 @@ exit /b 0
 echo Incarcarea a fost anulata. Nu s-a trimis nimic pe GitHub.
 pause
 exit /b 0
+
+:merge_conflict
+echo.
+echo Git a gasit fisiere modificate atat local, cat si online si a oprit unirea.
+echo Nu s-a suprascris istoricul online. Cere ajutor pentru rezolvarea conflictelor, apoi ruleaza din nou acest fisier.
+pause
+exit /b 1
 
 :failed
 echo.
