@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: nicubank
+    runtime: node
+    plan: starter
+    region: frankfurt
+    buildCommand: npm ci --include=optional && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/session
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: NICUBANK_DATA_DIR
+        value: /var/data
+      - key: SETUP_TOKEN
+        generateValue: true
+    disk:
+      name: nicubank-data
+      mountPath: /var/data
+      sizeGB: 1

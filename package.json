@@ -1,0 +1,33 @@
+{
+  "name": "nicubank",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server/index.js",
+    "build": "vite build",
+    "start": "node server/index.js",
+    "preview": "vite preview",
+    "test:api": "node --test tests/api.test.mjs",
+    "test:sites": "node --test tests/sites-worker.test.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "5.0.4",
+    "vite": "6.4.2",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "basic-ftp": "^5.0.5",
+    "better-sqlite3": "^12.2.0",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "pdfkit": "^0.17.2",
+    "pdfjs-dist": "^5.4.149",
+    "recharts": "^3.2.1",
+    "ssh2-sftp-client": "^12.1.1",
+    "tesseract.js": "^6.0.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {}
+}
