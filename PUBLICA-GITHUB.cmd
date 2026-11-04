@@ -22,21 +22,26 @@ if not exist ".git" (
 git branch -M main
 if errorlevel 1 goto :failed
 
+set "CURRENT_REMOTE="
 git remote get-url origin >nul 2>&1
-if errorlevel 1 goto :ask_remote
-for /f "delims=" %%U in ('git remote get-url origin') do set "REMOTE_URL=%%U"
-echo Depozitul GitHub configurat: %REMOTE_URL%
-goto :stage_files
-
-:ask_remote
-set /p "REMOTE_URL=Lipeste adresa HTTPS a depozitului GitHub (exemplu: https://github.com/utilizator/nicubank.git): "
-if not defined REMOTE_URL (
-  echo Nu ai introdus adresa depozitului.
+if not errorlevel 1 for /f "delims=" %%U in ('git remote get-url origin') do set "CURRENT_REMOTE=%%U"
+if defined CURRENT_REMOTE echo Depozitul configurat acum: %CURRENT_REMOTE%
+set /p "REMOTE_URL=Lipeste adresa HTTPS GitHub pentru depozitul dorit (Enter pastreaza adresa existenta): "
+if not defined REMOTE_URL if not defined CURRENT_REMOTE (
+  echo Nu ai introdus o adresa GitHub.
   pause
   exit /b 1
 )
-git remote add origin "%REMOTE_URL%"
+if not defined REMOTE_URL set "REMOTE_URL=%CURRENT_REMOTE%"
+
+git remote get-url origin >nul 2>&1
+if errorlevel 1 (
+  git remote add origin "%REMOTE_URL%"
+) else (
+  git remote set-url origin "%REMOTE_URL%"
+)
 if errorlevel 1 goto :failed
+echo Codul va fi trimis la: %REMOTE_URL%
 
 :stage_files
 git add -A
